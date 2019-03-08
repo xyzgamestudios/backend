@@ -42,7 +42,7 @@
         <!-- 日志 Log4j2 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <!-- thymeleaf 模版引擎 -->
         <dependency>
