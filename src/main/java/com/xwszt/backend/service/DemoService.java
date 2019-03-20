@@ -8,8 +8,13 @@ import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -28,10 +33,36 @@ public class DemoService {
 
     private static Logger logger = LoggerFactory.getLogger(DemoService.class);
 
-    @Cacheable(value = "getValue", keyGenerator = "keyGenerator")
+    @Cacheable(value = "getValue", key = "#key")
     public String get(String key) {
         logger.info("第一次从DB读取");
         return redisTemplate.opsForValue().get(key).toString();
+    }
+
+    public String benchmark() {
+        Runtime runtime = Runtime.getRuntime();
+        String line;
+        StringBuffer sb = new StringBuffer();
+        try {
+            Process process = runtime.exec(" redis-benchmark -c 60 -n 1000  -h 172.16.172.128 -p 7001 -a passwd123");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
+
+    public Properties info(String section) {
+        Properties info;
+        if (StringUtils.isEmpty(section)) {
+            info = lettuceConnectionFactory.getClusterConnection().info();
+        } else {
+            info = lettuceConnectionFactory.getClusterConnection().info(section);
+        }
+        return info;
     }
 
     public void meet(String ip, Integer port) {

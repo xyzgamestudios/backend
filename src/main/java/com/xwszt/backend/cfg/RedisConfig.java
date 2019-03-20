@@ -81,6 +81,11 @@ public class RedisConfig extends CachingConfigurerSupport {
         return template;
     }
 
+    /**
+     * 定义json的value解析工具
+     *
+     * @return
+     */
     private Jackson2JsonRedisSerializer jackson2JsonRedisSerializer() {
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
 
@@ -93,7 +98,7 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     /**
-     * spring的cache配置
+     * spring的cacheManager配置
      * @param lettuceConnectionFactory
      * @return
      */

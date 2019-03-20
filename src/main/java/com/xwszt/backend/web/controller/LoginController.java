@@ -1,12 +1,13 @@
 package com.xwszt.backend.web.controller;
 
 import com.xwszt.backend.service.DemoService;
+import com.xwszt.backend.web.vo.CommandStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.*;
 
 /**
  * 登录模块
@@ -28,6 +29,40 @@ public class LoginController {
     @RequestMapping("/get/{key}")
     public String get(@PathVariable("key") String key) {
         return "key : " + key + ", value : " + demoService.get(key);
+    }
+
+    @RequestMapping("/info/{section}")
+    public Object info(@PathVariable("section") String section) {
+        Properties info = demoService.info(section);
+        if ("commandstats".equalsIgnoreCase(section)) {
+            Properties properties = new Properties();
+            Set<Object> keySet = info.keySet();
+            List<CommandStats> statsList = new ArrayList<>(keySet.size());
+            Iterator<Object> iterator = keySet.iterator();
+            while (iterator.hasNext()) {
+                Object key = iterator.next();
+
+                CommandStats stats = new CommandStats();
+                String[] keySplit = key.toString().split(".cmdstat_");
+                stats.setNode(keySplit[0]);
+                stats.setCmdName(keySplit[1]);
+
+                String value = (String)info.get(key);
+                String[] valueSplit = value.split(",");
+                stats.setCount(valueSplit[0].split("=")[1]);
+                stats.setTotalCpuUseTime(valueSplit[1].split("=")[1]);
+                stats.setPerCpuUseTime(valueSplit[2].split("=")[1]);
+                statsList.add(stats);
+            }
+            return statsList;
+        } else {
+            return info;
+        }
+    }
+
+    @RequestMapping("/benchmark")
+    public String benchmark() {
+        return demoService.benchmark();
     }
 
     /**

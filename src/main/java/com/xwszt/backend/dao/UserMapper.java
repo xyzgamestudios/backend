@@ -1,8 +1,6 @@
 package com.xwszt.backend.dao;
 
 import com.xwszt.backend.po.UserEntity;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import java.util.List;
  *
  * @author xwszt
  */
-@Mapper
+//@Mapper
 public interface UserMapper {
 
     /**
@@ -19,6 +17,6 @@ public interface UserMapper {
      *
      * @return
      */
-    @Select("SELECT * FROM users")
+//    @Select("SELECT * FROM users")
     List<UserEntity> getAll();
 }

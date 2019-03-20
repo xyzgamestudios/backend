@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
  * @author xwszt
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class CustomException extends RuntimeException {
     /**
@@ -29,4 +28,23 @@ public class CustomException extends RuntimeException {
      * 异常描述
      */
     private String descInfo;
+
+    public CustomException() {
+    }
+
+    public CustomException(String message) {
+        super(message);
+    }
+
+    public CustomException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public CustomException(Throwable cause) {
+        super(cause);
+    }
+
+    public CustomException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

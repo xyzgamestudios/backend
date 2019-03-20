@@ -1,17 +1,17 @@
 package com.xwszt.backend.web.advice;
 
+import com.xwszt.backend.exception.CustomException;
 import com.xwszt.backend.web.vo.Json;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * web层异常统一处理
  *
  * @author xwszt
  */
-//@ControllerAdvice
+@ControllerAdvice
 public class WebExceptionHandler {
 
     /**
@@ -20,20 +20,13 @@ public class WebExceptionHandler {
      * @param ex
      * @return
      */
-//    @ExceptionHandler(value = Exception.class)
-//    @ResponseBody
-    public Json execptionHandler(Exception ex) {
-        return new Json();
-    }
-
-    /**
-     * 跳转到页面的异常捕获
-     *
-     * @param ex
-     * @return
-     */
-//    @ExceptionHandler(value = Exception.class)
-    public ModelAndView pageExceptionHandler(Exception ex){
-        return new ModelAndView();
+    @ExceptionHandler(value = CustomException.class)
+    @ResponseBody
+    public Json handlerExceptionResolver(CustomException ex) {
+        Json json = new Json();
+        json.setCode(ex.getCode());
+        json.setMsg(ex.getMessage());
+        json.setData(ex);
+        return json;
     }
 }
